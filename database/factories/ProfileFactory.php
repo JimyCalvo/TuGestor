@@ -20,8 +20,6 @@ class ProfileFactory extends Factory
             'gender' => $this->faker->randomElement(['male', 'female', 'other']),
             'job_title' => $this->faker->jobTitle,
             'tel_job' => $this->faker->numerify('########'),
-
-
             'user_id' => User::factory(),
         ];
     }

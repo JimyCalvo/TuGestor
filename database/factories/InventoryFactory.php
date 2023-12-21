@@ -18,7 +18,6 @@ class InventoryFactory extends Factory
             'inventory_cost' => $this->faker->randomFloat(2, 0, 1000),
             'repository_id'=>Repository::factory(),
             'responsible_id'=>User::factory(),
-
         ];
     }
 }

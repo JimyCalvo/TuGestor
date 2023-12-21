@@ -26,6 +26,9 @@ class FortifyServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Fortify::verifyEmailView(function () {
+            return view('auth.verify-email');
+        });
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)
                         ->orWhere('username', $request->email)->first();

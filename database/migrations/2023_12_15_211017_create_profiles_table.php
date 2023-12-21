@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('dni',10);
+            $table->string('dni',10)->unique();
             $table->string('phone_user',20)->nullable();
             $table->string('tel_user',11)->nullable();
             $table->text('address',200);

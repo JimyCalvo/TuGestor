@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Users\UserControllerSA;
 
@@ -11,39 +11,26 @@ Route::get('/', function () {
 });
 
 
-Route::get('/home', [HomeController::class ,'index'])->name('home');
+Route::middleware(['auth','verified','profile.complete'])->get('/home', [HomeController::class ,'index'])->name('home');
+Route::middleware(['auth','verified'])->resource('profile', ProfileController::class);
 
-Route::prefix('employee')->middleware(['auth', 'employee'])->group(function () {
+Route::prefix('employee')->middleware(['auth','verified','employee'])->group(function () {
     Route::get('/home',  [HomeController::class, 'employeeHome'])->name('employee.home');
-    Route::get('/user/profile', [UserProfileController::class, 'show'])->name('user.profile');
-    Route::get('/create/profile', [UserProfileController::class, 'create'])->name('create.profile');
-    Route::post('/store/profile', [UserProfileController::class, 'store'])->name('store.profile');
+});
 
+Route::prefix('supervisor')->middleware(['auth','verified','supervisor' ])->group(function () {
+     Route::get('/home', [HomeController::class, 'supervisorHome'])->name('supervisor.home');
 
 });
 
-Route::prefix('supervisor')->middleware(['auth', 'supervisor'])->group(function () {
-    Route::get('/home', [HomeController::class, 'supervisorHome'])->name('supervisor.home');
-    Route::get('/user/profile', [UserProfileController::class, 'show'])->name('user.profile');
-    Route::get('/create/profile', [UserProfileController::class, 'create'])->name('create.profile');
-    Route::post('/store/profile', [UserProfileController::class, 'store'])->name('store.profile');
-
-});
-
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/home',  [HomeController::class, 'adminHome'])->name('admin.home');
-    Route::get('/user/profile', [UserProfileController::class, 'show'])->name('user.profile');
-    Route::get('/create/profile', [UserProfileController::class, 'create'])->name('create.profile');
-    Route::post('/store/profile', [UserProfileController::class, 'store'])->name('store.profile');
+Route::prefix('admin')->middleware(['auth','verified','admin'])->group(function () {
+     Route::get('/home',  [HomeController::class, 'adminHome'])->name('admin.home');
     Route::resource('/users', UserController::class);
 
 });
 
-Route::prefix('super-admin')->middleware(['auth', 'super_admin'])->group(function () {
+Route::prefix('super-admin')->middleware(['auth','super_admin'])->group(function () {
     Route::get('/home',  [HomeController::class, 'superAdminHome'])->name('super_admin.home');
-    Route::get('/user/profile', [UserProfileController::class, 'show'])->name('user.profile');
-    Route::get('/create/profile', [UserProfileController::class, 'create'])->name('create.profile');
-    Route::post('/store/profile', [UserProfileController::class, 'store'])->name('store.profile');
     Route::resource('/users', UserControllerSA::class);
 
 });
